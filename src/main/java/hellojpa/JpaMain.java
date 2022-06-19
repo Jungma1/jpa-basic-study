@@ -15,14 +15,6 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setUsername("A");
-
-            em.persist(member);
-
-            // IDENTITY 전략은 em.persist() 시점에 즉시 INSERT SQL 실행하고 DB 에서 식별자를 조회함
-            System.out.println("member.getId() = " + member.getId());
-
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
