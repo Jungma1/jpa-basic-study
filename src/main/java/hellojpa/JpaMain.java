@@ -16,11 +16,12 @@ public class JpaMain {
 
         try {
             Member member = new Member();
-            member.setId(3L);
-            member.setUsername("C");
-            member.setRoleType(RoleType.GUEST);
+            member.setUsername("A");
 
             em.persist(member);
+
+            // IDENTITY 전략은 em.persist() 시점에 즉시 INSERT SQL 실행하고 DB 에서 식별자를 조회함
+            System.out.println("member.getId() = " + member.getId());
 
             tx.commit();
         } catch (Exception e) {
