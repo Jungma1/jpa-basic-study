@@ -1,33 +1,29 @@
 package hellojpa;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.Data;
 
-//@Entity
+@Data
+@Entity
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
+    @Column(name = "member_id")
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column
     private String username;
 
-    public Long getId() {
-        return id;
-    }
+//    @Column(name = "team_id")
+//    private Long teamId;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
 }
