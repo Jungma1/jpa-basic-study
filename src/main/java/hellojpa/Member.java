@@ -26,4 +26,9 @@ public class Member {
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
+
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this); // 연관관계 편의 메서드 활용
+    }
 }

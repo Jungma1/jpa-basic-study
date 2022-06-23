@@ -22,13 +22,16 @@ public class JpaMain {
 
             Member member = new Member();
             member.setUsername("memberA");
-            member.setTeam(team);
+            member.changeTeam(team);
             em.persist(member);
 
-            em.flush();
-            em.clear();
+            // 양방향 연관관계에서는 순수 객체 상태를 고려해서 항상 양쪽(member, team)에 값을 설정하도록 함
+//            team.getMembers().add(member);
 
-            Member findMember = em.find(Member.class, member.getId());
+//            em.flush();
+//            em.clear();
+
+            Member findMember = em.find(Member.class, member.getId()); // 영속성 컨텍스트에서 가져옴
             List<Member> members = findMember.getTeam().getMembers();
 
             for (Member m : members) {
