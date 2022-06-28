@@ -10,11 +10,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "d_member")
-public class Member {
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

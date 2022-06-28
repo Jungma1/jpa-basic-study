@@ -7,11 +7,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity(name = "d_team")
-public class Team {
+public class Team extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
