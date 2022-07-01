@@ -15,19 +15,22 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Movie movie = new Movie();
-            movie.setDirector("aaa");
-            movie.setActor("bbb");
-            movie.setName("범죄도시2");
-            movie.setPrice(14000);
+            Member member = new Member();
+            member.setUsername("hello");
 
-            em.persist(movie);
-
+            em.persist(member);
             em.flush();
             em.clear();
 
-            Movie findMovie = em.find(Movie.class, movie.getId());
-            System.out.println("findMovie = " + findMovie);
+//            Member findMember = em.find(Member.class, member.getId());
+
+            // em.getReference() - 데이터베이스 조회를 미루는 가짜(프록시) 엔티티 객체 조회
+            Member findMember = em.getReference(Member.class, member.getId());
+
+            // findMember = class hellojpa.Member$HibernateProxy$6wJulIUS
+            System.out.println("findMember = " + findMember.getClass());
+            System.out.println("findMember.getId() = " + findMember.getId());
+            System.out.println("findMember.getUsername() = " + findMember.getUsername());
 
             tx.commit();
         } catch (Exception e) {
