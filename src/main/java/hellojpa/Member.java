@@ -2,6 +2,7 @@ package hellojpa;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -26,7 +27,8 @@ public class Member extends BaseTimeEntity {
     @Column
     private String username;
 
-    @ManyToOne
+    //    @ManyToOne(fetch = FetchType.EAGER) // 즉시 로딩 - 실무에서 사용 X
+    @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩
     @JoinColumn(name = "team_id")
     private Team team;
 
