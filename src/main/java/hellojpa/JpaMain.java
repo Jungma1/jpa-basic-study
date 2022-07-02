@@ -15,27 +15,14 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Team team = new Team();
-            team.setName("teamA");
-            em.persist(team);
+            Child childA = new Child();
+            Child childB = new Child();
 
-            Member member = new Member();
-            member.setUsername("hello");
-            member.setTeam(team);
-            em.persist(member);
+            Parent parent = new Parent();
+            parent.addChild(childA);
+            parent.addChild(childB);
 
-            em.flush();
-            em.clear();
-
-            Member m = em.find(Member.class, member.getId());
-
-            // m = class hellojpa.Team$HibernateProxy$spkqHmpd
-            System.out.println("m = " + m.getTeam().getClass());
-
-            System.out.println("===============");
-            // 실제 team 을 사용하는 시점에 select 쿼리문이 실행 (Member 에 team 은 지연 로딩 LAZY)
-            m.getTeam().getName();
-            System.out.println("===============");
+            em.persist(parent); // cascade = CascadeType.ALL - child 도 persist 실행
 
             tx.commit();
         } catch (Exception e) {
