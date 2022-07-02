@@ -22,7 +22,8 @@ public class Parent {
     private String name;
 
     // 영속성 전이(CASCADE) - cascade = CascadeType.ALL
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    // 고아 객체 - orphanRemoval = true
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Child> childList = new ArrayList<>();
 
     public void addChild(Child child) {
