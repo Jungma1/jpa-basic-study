@@ -1,6 +1,7 @@
 package hellojpa;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +27,12 @@ public class Member extends BaseTimeEntity {
 
     @Column
     private String username;
+
+    @Embedded
+    private Period workPeriod;
+
+    @Embedded
+    private Address homeAddress;
 
     //    @ManyToOne(fetch = FetchType.EAGER) // 즉시 로딩 - 실무에서 사용 X
     @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩
