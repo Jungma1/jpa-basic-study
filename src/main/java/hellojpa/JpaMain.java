@@ -33,7 +33,11 @@ public class JpaMain {
             // 임베디드 타입 같은 값 타입은 여러 엔티티에서 공유하면 위험함
             // member1 에 city 정보를 변경했지만 member2 에 city 도 같이 변경됨
             // 따라서, *값(인스턴스)를 복사해서 사용하도록 함
-            member1.getHomeAddress().setCity("newCity");
+
+            // *불변 객체로 위와 같은 문제를 해결함
+//            member1.getHomeAddress().setCity("newCity");
+            Address newAddress = new Address("newCity", address.getStreet(), address.getZipcode());
+            member1.setHomeAddress(newAddress);
 
             tx.commit();
         } catch (Exception e) {
