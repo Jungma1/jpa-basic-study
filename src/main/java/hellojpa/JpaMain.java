@@ -1,12 +1,12 @@
 package hellojpa;
 
+import hellojpa.jpql.Member;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import java.util.List;
 
 public class JpaMain {
@@ -19,20 +19,25 @@ public class JpaMain {
         tx.begin();
 
         try {
-            List<Member> result = em.createQuery("select m from d_member m where m.username like '%hello%'",
-                    Member.class).getResultList();
+            Member member = new Member();
+            member.setUsername("member");
+            member.setAge(10);
+            em.persist(member);
 
-            for (Member member : result) {
-                System.out.println("member = " + member);
-            }
+            // TypedQuery: 반환 타입이 명확할 때 사용
+            // Query: 반환 타입이 명확하지 않을 때 사용
+            TypedQuery<Member> query1 = em.createQuery("select m from j_member m", Member.class);
+            Query query2 = em.createQuery("select m.username, m.age from j_member m");
 
-            // Criteria (실무 사용 X) => 대신 QueryDSL 사용 권장
-            CriteriaBuilder cb = em.getCriteriaBuilder();
-            CriteriaQuery<Member> query = cb.createQuery(Member.class);
+            // getResultList(): 결과가 하나 이상일 때 리스트 반환 (결과가 없으면 빈 리스트 반환)
+            // getSingleResult(): 결과가 정확히 하나일 때 단일 객체 반환 (결과가 없으면 NoResultException, 둘 이상이면 NonUniqueResultException)
+            List<Member> members = query1.getResultList();
+            Member findMember = query1.getSingleResult();
 
-            Root<Member> m = query.from(Member.class);
-            CriteriaQuery<Member> cq = query.select(m).where(cb.equal(m.get("username"), "hello"));
-            List<Member> resultList = em.createQuery(cq).getResultList();
+            // 파라미터 바인딩 - 이름 기준
+            Member findMember2 = em.createQuery("select m from j_member m where m.username = :username", Member.class)
+                    .setParameter("username", "member")
+                    .getSingleResult();
 
             tx.commit();
         } catch (Exception e) {
