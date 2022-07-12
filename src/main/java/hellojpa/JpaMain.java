@@ -1,6 +1,7 @@
 package hellojpa;
 
 import hellojpa.jpql.Member;
+import hellojpa.jpql.Team;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -17,25 +18,26 @@ public class JpaMain {
         tx.begin();
 
         try {
-            for (int i = 0; i < 100; i++) {
-                Member member = new Member();
-                member.setUsername("member" + i);
-                member.setAge(i);
-                em.persist(member);
-            }
+            Team team = new Team();
+            team.setName("team");
+            em.persist(team);
+
+            Member member = new Member();
+            member.setUsername("team");
+            member.setAge(10);
+            member.changeTeam(team);
+            em.persist(member);
 
             em.flush();
             em.clear();
 
-            List<Member> result = em.createQuery("select m from j_member m order by m.age desc", Member.class)
-                    .setFirstResult(0)
-                    .setMaxResults(10)
-                    .getResultList();
+//            String query = "select m from j_member m left join m.team t";
+//            String query = "select m from j_member m left join m.team t on t.name = 'team'";
 
-            System.out.println("result.size() = " + result.size());
-            for (Member member1 : result) {
-                System.out.println("member1.getAge() = " + member1.getAge());
-            }
+            // 연관관계가 없는 엔티티 외부 조인
+            String query = "select m from j_member m left join j_team t on m.username = t.name";
+            List<Member> result = em.createQuery(query, Member.class)
+                    .getResultList();
 
             tx.commit();
         } catch (Exception e) {
