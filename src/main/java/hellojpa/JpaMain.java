@@ -23,7 +23,7 @@ public class JpaMain {
             em.persist(team);
 
             Member member = new Member();
-            member.setUsername("team");
+            member.setUsername(null);
             member.setAge(10);
             member.changeTeam(team);
             em.persist(member);
@@ -31,13 +31,19 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-//            String query = "select m from j_member m left join m.team t";
-//            String query = "select m from j_member m left join m.team t on t.name = 'team'";
-
-            // 연관관계가 없는 엔티티 외부 조인
-            String query = "select m from j_member m left join j_team t on m.username = t.name";
-            List<Member> result = em.createQuery(query, Member.class)
+            String query = "select case when m.age <= 10 then '학생요금' when m.age <= 60 then '경로요금' else '일반요금' end from j_member m";
+            List<String> result = em.createQuery(query, String.class)
                     .getResultList();
+
+            result.forEach(System.out::println); // 학생요금
+
+            // coalesce: 하나씩 조회해서 null 이 아니면 반환
+            // nullif: 두 값이 같으면 null 반환, 다르면 첫번째 값 반환
+            String query2 = "select coalesce(m.username, '이름 없는 회원') from j_member m";
+            List<String> result2 = em.createQuery(query2, String.class)
+                    .getResultList();
+
+            result2.forEach(System.out::println); // 이름 없는 회원
 
             tx.commit();
         } catch (Exception e) {
