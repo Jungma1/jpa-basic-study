@@ -79,6 +79,22 @@ public class JpaMain {
                 }
             }
 
+            // 기본 키 - JPQL 에서 엔티티를 직접 사용하면 SQL 에서 해당 엔티티의 기본 키 값을 사용함
+            String query4 = "select m from j_member m where m = :member";
+            Member findMember = em.createQuery(query4, Member.class)
+                    .setParameter("member", member1)
+                    .getSingleResult();
+
+            System.out.println("findMember = " + findMember);
+
+            // 외래 키
+            String query5 = "select m from j_member m where m.team = :team";
+            List<Member> members = em.createQuery(query5, Member.class)
+                    .setParameter("team", teamA)
+                    .getResultList();
+
+            members.forEach(System.out::println);
+
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
