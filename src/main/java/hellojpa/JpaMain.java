@@ -44,53 +44,8 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            // 지연 로딩
-            // Member1, TeamA(SQL)
-            // Member2, TeamA(영속성 컨텍스트 - 1차 캐시)
-            // Member3, TeamB(SQL)
-            // 만약, 회원이 100명이라면 쿼리문 실행이 많아짐 -> N + 1 문제 -> *페치 조인으로 해결
-            String query = "select m from j_member m";
-            List<Member> result = em.createQuery(query, Member.class)
-                    .getResultList();
-
-            for (Member member : result) {
-                System.out.println("member = " + member.getUsername() + ", " + member.getTeam().getName());
-            }
-
-            // 페치 조인으로 회원과 팀을 함께 조회해서 지연 로딩이 없음
-            String query2 = "select m from j_member m join fetch m.team";
-            List<Member> result2 = em.createQuery(query2, Member.class)
-                    .getResultList();
-
-            for (Member member : result2) {
-                System.out.println("member = " + member.getUsername() + ", " + member.getTeam().getName());
-            }
-
-            // 컬렉션 페치 조인
-            String query3 = "select t from j_team t join fetch t.members";
-            List<Team> result3 = em.createQuery(query3, Team.class)
-                    .getResultList();
-
-            for (Team team : result3) {
-                System.out.println("team = " + team.getName() + "|" + team.getMembers().size());
-
-                for (Member member : team.getMembers()) {
-                    System.out.println("-> member = " + member);
-                }
-            }
-
-            // 기본 키 - JPQL 에서 엔티티를 직접 사용하면 SQL 에서 해당 엔티티의 기본 키 값을 사용함
-            String query4 = "select m from j_member m where m = :member";
-            Member findMember = em.createQuery(query4, Member.class)
-                    .setParameter("member", member1)
-                    .getSingleResult();
-
-            System.out.println("findMember = " + findMember);
-
-            // 외래 키
-            String query5 = "select m from j_member m where m.team = :team";
-            List<Member> members = em.createQuery(query5, Member.class)
-                    .setParameter("team", teamA)
+            List<Member> members = em.createNamedQuery("j_member.findByUsername", Member.class)
+                    .setParameter("username", "Member1")
                     .getResultList();
 
             members.forEach(System.out::println);
